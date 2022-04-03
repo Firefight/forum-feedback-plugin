@@ -10,7 +10,7 @@
     },
     "extra": {
         "flarum-extension": {
-            "title": "Forum Feedback Plugin",
+            "title": "Firefight Feedback Plugin",
             "icon": {
                 "name": "fas fa-smile",
                 "backgroundColor": "#238c59",
