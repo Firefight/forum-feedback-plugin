@@ -14,8 +14,8 @@ return Migration::createTable('post_report_data', function (Blueprint $table) {
     $table->double('coord_x');
     $table->double('coord_y');
     $table->string('friendly_coordinates');
-    $table->int('type');
-    $table->int('mood');
+    $table->integer('type');
+    $table->integer('mood');
     $table->dateTime('timestamp');
 
     $table->foreign('post_id')

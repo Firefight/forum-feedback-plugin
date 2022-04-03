@@ -52,36 +52,31 @@ app.initializers.add('feedback-plugin', function(app) {
          N: 'Numbers Only',
          AN: 'Alpha Numeric',
        },
-       default: 'N',
        type: 'select'
      })
      .registerSetting({
-       setting: 'firefight-feedback-plugin.auth_code_timeout',
+       setting: 'firefight-feedback-plugin.verification_code_timeout',
        label: 'Validation Code Timeout',
        type: 'number'
      })
      .registerSetting({
        setting: 'firefight-feedback-plugin.bind_command',
        label: 'Minecraft command to bind Minecraft to Flarum User',
-       default: '/bind',
        type: 'string'
      })
      .registerSetting({
        setting: 'firefight-feedback-plugin.feedback_slug',
        label: 'Slug for feedback Primary Tag',
-       default: 'feedback',
        type: 'string',
      })
      .registerSetting({
        setting: 'firefight-feedback-plugin.feature_feedback_slug',
        label: 'Slug for feature feedback Secondary Tag',
-       default: 'feature-feedback',
        type: 'string',
      })
      .registerSetting({
        setting: 'firefight-feedback-plugin.general_feedback_slug',
        label: 'Slug for general feedback Secondary Tag',
-       default: 'general-feedback',
        type: 'string'
      })
 })
