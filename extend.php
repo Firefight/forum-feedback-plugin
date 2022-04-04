@@ -2,7 +2,10 @@
 
 use Flarum\Extend;
 use Flarum\Frontend\Document;
-use Flarum\Post\Post;
+use Flarum\Discussion\Discussion;
+use Flarum\Api\Controller\ListDiscussionsController;
+use Firefight\ForumFeedback\DiscussionReportData;
+use Firefight\ForumFeedback\FirefightDiscussionSerializer;
 
 return [
     (new Extend\Frontend('admin'))
@@ -22,6 +25,9 @@ return [
     (new Extend\Routes('api'))
         ->post('/bindAccount', 'bindAccount', Firefight\ForumFeedback\Api\Controller\UUIDBindingController::class)
         ->post('/submitFeedback', 'submitFeedback', Firefight\ForumFeedback\Api\Controller\PostCreator::class),
-    (new Extend\Model(Post::class))
-        ->belongsTo('postReportData', 'App\PostReportData', 'post_id', 'id')
+    (new Extend\Model(Discussion::class))
+        ->belongsTo('discussionReportData', DiscussionReportData::class, 'discussion_id', 'id'),
+    (new Extend\ApiController(ListDiscussionsController::class))
+        ->addInclude('discussionReportData')
+        ->setSerializer(FirefightDiscussionSerializer::class)
 ];

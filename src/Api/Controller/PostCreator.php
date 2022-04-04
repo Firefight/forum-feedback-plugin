@@ -2,7 +2,7 @@
 
 namespace Firefight\ForumFeedback\Api\Controller;
 
-use Firefight\ForumFeedback\PostReportData;
+use Firefight\ForumFeedback\DiscussionReportData;
 use Flarum\Discussion\Discussion;
 use Flarum\Post\CommentPost;
 use Flarum\Tags\Tag;
@@ -67,19 +67,19 @@ class PostCreator implements RequestHandlerInterface
 
         $post->save();
 
-        $postReportData = new PostReportData;
+        $reportData = new DiscussionReportData;
 
-        $postReportData->post_id = $post->id;
-        $postReportData->image_url = $image_url;
-        $postReportData->coord_x = $coord_x;
-        $postReportData->coord_y = $coord_y;
-        $postReportData->friendly_coordinates = $friendly_coordinates;
-        $postReportData->type = $type;
-        $postReportData->mood = $mood;
-        $postReportData->timestamp = $timestamp;
-        $postReportData->uuid = $uuid;
+        $reportData->discussion_id = $discussion->id;
+        $reportData->image_url = $image_url;
+        $reportData->coord_x = $coord_x;
+        $reportData->coord_y = $coord_y;
+        $reportData->friendly_coordinates = $friendly_coordinates;
+        $reportData->type = $type;
+        $reportData->mood = $mood;
+        $reportData->timestamp = $timestamp;
+        $reportData->uuid = $uuid;
 
-        $postReportData->save();
+        $reportData->save();
 
         $discussion->refreshCommentCount();
         $discussion->refreshParticipantCount();

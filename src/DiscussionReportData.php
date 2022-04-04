@@ -2,18 +2,18 @@
 
 namespace Firefight\ForumFeedback;
 
-use Flarum\Post\Post;
+use Flarum\Discussion\Discussion;
 use Flarum\Database\AbstractModel;
 use Flarum\Database\ScopeVisibilityTrait;
 use Flarum\Foundation\EventGeneratorTrait;
 
-class PostReportData extends AbstractModel
+class DiscussionReportData extends AbstractModel
 {
     // See https://docs.flarum.org/extend/models.html#backend-models for more information.
     
-    protected $table = 'post_report_data';
+    protected $table = 'discussion_report_data';
 
-    function post() {
-        return $this->hasOne(Post::class);
+    function discussion() {
+        return $this->hasOne(Discussion::class);
     }
 }
