@@ -11,7 +11,8 @@ return [
     (new Extend\Frontend('admin'))
         ->js(__DIR__.'/dist/admin.js'),
     (new Extend\Frontend('forum'))
-        ->js(__DIR__.'/dist/forum.js'),
+        ->js(__DIR__.'/dist/forum.js')
+        ->css(__DIR__.'/src/less/forum.less'),
     (new Extend\Settings)
         ->serializeToForum('bindCommand', 'firefight-feedback-plugin.bind_command')
         ->serializeToForum('authCodeTimeout', 'firefight-feedback-plugin.auth_code_timeout')
@@ -28,6 +29,5 @@ return [
     (new Extend\Model(Discussion::class))
         ->belongsTo('discussionReportData', DiscussionReportData::class, 'discussion_id', 'id'),
     (new Extend\ApiController(ListDiscussionsController::class))
-        ->addInclude('discussionReportData')
         ->setSerializer(FirefightDiscussionSerializer::class)
 ];
