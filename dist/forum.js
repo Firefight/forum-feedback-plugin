@@ -321,8 +321,6 @@ flarum_forum_components_DiscussionListItem__WEBPACK_IMPORTED_MODULE_0___default.
     }, controls)), m("ul", {
       className: "DiscussionListItem-info"
     }, flarum_common_helpers_listItems__WEBPACK_IMPORTED_MODULE_5___default()(this.infoItems().toArray()[1]))), m("img", {
-      widht: 466,
-      height: 145,
       src: reportData.image_url
     }));
   }

@@ -144,7 +144,7 @@ DiscussionListItem.prototype.view = function() {
             {listItems(this.infoItems().toArray()[1])}
           </ul>
         </div>
-        <img widht={466} height={145} src={reportData.image_url}/>
+        <img src={reportData.image_url}/>
       </div>
     );
   }
