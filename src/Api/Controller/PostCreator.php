@@ -58,9 +58,36 @@ class PostCreator implements RequestHandlerInterface
             $discussion->tags()->attach($featureFeedbackTag->id);
         }
 
+        $pretty_mood = '';
+
+        switch ($mood) {
+                case 0:
+                        $pretty_mood = 'Happy';
+                        break;
+                case 1:
+                        $pretty_mood = 'Neuteral';
+                        break;
+                case 2:
+                        $pretty_mood = 'Sad';
+                        break;
+        }
+
+        $pretty_time = gmdate("Y-m-d\ \@\ H:i", $timestamp);
+
+        $post_discription = <<<EOD
+![]($image_url)
+- Friendly Coordinates - $friendly_coordinates
+- Server Coordinates - $coord_x $coord_y
+- User UUID - $uuid
+- Time - $pretty_time
+- Mood - $pretty_mood
+
+Description: $description
+EOD;
+
         $post = CommentPost::reply(
             $discussion->id,
-            $description,
+            $post_discription,
             $bot->id,
             "::0"
         );

@@ -1,3 +1,4 @@
+import { extend } from 'flarum/common/extend'
 import DiscussionListItem from 'flarum/forum/components/DiscussionListItem'
 import app from 'flarum/forum/app';
 import Component from 'flarum/common/Component';
@@ -42,9 +43,9 @@ DiscussionListItem.prototype.view = function() {
     jumpTo = Math.min(discussion.lastPostNumber(), (discussion.lastReadPostNumber() || 0) + 1);
   }
 
-  const isThin = (this.element?.clientWidth ?? 830) < 820;
+  console.log(this)
 
-  if (reportData === undefined || isThin) {
+  if (reportData === undefined || this.thin) {
     return (
       <div {...attrs}>
         {controls.length > 0 &&
@@ -149,3 +150,9 @@ DiscussionListItem.prototype.view = function() {
     );
   }
 }
+
+extend(DiscussionListItem.prototype, 'oncreate', function(_, vnode) {
+  if (this.attrs.thin === undefined) {
+    this.subtree.data.thin = this.element.clientWidth < 820
+  }
+})
