@@ -76,13 +76,23 @@ class PostCreator implements RequestHandlerInterface
 
         $post_discription = <<<EOD
 ![]($image_url)
-- Friendly Coordinates - $friendly_coordinates
-- Server Coordinates - $coord_x $coord_y
-- User UUID - $uuid
-- Time - $pretty_time
-- Mood - $pretty_mood
+> ### $description
 
-Description: $description
+> Geo-Phrase: $friendly_coordinates
+
+
+>!raw POST
+```
+title: $title
+description: $description
+coord_x: $coord_x
+coord_y: $coord_y
+friendly_coordinates: $friendly_coordinates
+type: $type
+mood: $mood
+timestamp: $timestamp
+uuid: $uuid
+```
 EOD;
 
         $post = CommentPost::reply(
