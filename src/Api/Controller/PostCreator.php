@@ -82,7 +82,7 @@ class PostCreator implements RequestHandlerInterface
 
 
 >!raw POST
-```
+``` none
 title: $title
 description: $description
 coord_x: $coord_x
