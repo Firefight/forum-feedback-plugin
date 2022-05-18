@@ -16,116 +16,120 @@ use Flarum\Settings\SettingsRepositoryInterface;
 
 class PostCreator implements RequestHandlerInterface
 {
-    protected $settings;
+    protected SettingsRepositoryInterface $settings;
+
+    private $feedbackTag;
+    private $featureFeedbackTag;
+    private $generalFeedbackTag;
+    private $bot;
 
     public function __construct(SettingsRepositoryInterface $settings)
     {
         $this->settings = $settings;
+
+        $this->feedbackTag = Tag::where('slug', $this->settings->get('firefight-feedback-plugin.feedback_slug'))->firstOrFail();
+        $this->featureFeedbackTag = Tag::where('slug', $this->settings->get('firefight-feedback-plugin.feature_feedback_slug'))->firstOrFail();
+        $this->generalFeedbackTag = Tag::where('slug', $this->settings->get('firefight-feedback-plugin.general_feedback_slug'))->firstOrFail();
+        $this->bot = User::findOrFail($this->settings->get('firefight-feedback-plugin.bot_id'));
     }
 
-    public function handle(Request $request): Response
+    private function getParams($parsedBody): array
     {
-        // Settings
-        $feedbackTag = Tag::where('slug', $this->settings->get('firefight-feedback-plugin.feedback_slug'))->firstOrFail();
-        $featureFeedbackTag = Tag::where('slug', $this->settings->get('firefight-feedback-plugin.feature_feedback_slug'))->firstOrFail();
-        $generalFeedbackTag = Tag::where('slug', $this->settings->get('firefight-feedback-plugin.general_feedback_slug'))->firstOrFail();
-        $bot = User::findOrFail($this->settings->get('firefight-feedback-plugin.bot_id'));
+        return [
+            'title' => Arr::get($parsedBody, 'title', 'title undefined'),
+            'image_url' => Arr::get($parsedBody, 'image_url', ''),
+            'description' => Arr::get($parsedBody, 'description', 'descirption undefined'),
+            'coord_x' => floatval(Arr::get($parsedBody, 'coord_x', 0)),
+            'coord_y' => floatval(Arr::get($parsedBody, 'coord_y', 0)),
+            'friendly_coordinates' => Arr::get($parsedBody, 'friendly_coordinates', ''),
+            'type' => intval(Arr::get($parsedBody, 'type', 0)),
+            'mood' => intval(Arr::get($parsedBody, 'mood', 0)),
+            'timestamp' => Arr::get($parsedBody, 'timestamp', 0),
+            'uuid' => Arr::get($parsedBody, 'uuid', 'f498513c-e8c8-4773-be26-ecfc7ed5185d')
+        ];
+    }
 
-
-        // Get params
-        $parsedBody = $request->getParsedBody();
-
-        $title = Arr::get($parsedBody, 'title', 'title undefined');
-        $image_url = Arr::get($parsedBody, 'image_url', '');
-        $description = Arr::get($parsedBody, 'description', 'descirption undefined');
-        $coord_x = floatval(Arr::get($parsedBody, 'coord_x', 0));
-        $coord_y = floatval(Arr::get($parsedBody, 'coord_y', 0));
-        $friendly_coordinates = Arr::get($parsedBody, 'friendly_coordinates', '');
-        $type = intval(Arr::get($parsedBody, 'type', 0));
-        $mood = intval(Arr::get($parsedBody, 'mood', 0));
-        $timestamp = Arr::get($parsedBody, 'timestamp', 0);
-        $uuid = Arr::get($parsedBody, 'uuid', 'f498513c-e8c8-4773-be26-ecfc7ed5185d');
-
-        // do shit
-        $discussion = Discussion::start($title, $bot);
+    private function createDiscussion($params) {
+        $discussion = Discussion::start($params['title'], $this->bot);
         $discussion->save();
 
-        $discussion->tags()->attach($feedbackTag->id);
+        $discussion->tags()->attach($this->feedbackTag->id);
 
-        if ($type == 0) {
-            $discussion->tags()->attach($generalFeedbackTag->id);
-        } else if ($type == 1) {
-            $discussion->tags()->attach($featureFeedbackTag->id);
+        if ($params['type'] == 0) {
+            $discussion->tags()->attach($this->generalFeedbackTag->id);
+        } else if ($params['type'] == 1) {
+            $discussion->tags()->attach($this->featureFeedbackTag->id);
         }
 
-        $pretty_mood = '';
 
-        switch ($mood) {
-                case 0:
-                        $pretty_mood = 'Happy';
-                        break;
-                case 1:
-                        $pretty_mood = 'Neuteral';
-                        break;
-                case 2:
-                        $pretty_mood = 'Sad';
-                        break;
-        }
 
-        $pretty_time = gmdate("Y-m-d\ \@\ H:i", $timestamp);
+        return $discussion;
+    }
 
+    public function sendPost($discussion, $params) {
         $post_discription = <<<EOD
-![]($image_url)
-> ### $description
+![](${$params['image_url']})
+> ### ${$params['description']}
 
-> Geo-Phrase: $friendly_coordinates
+> Geo-Phrase: ${$params['friendly_coordinates']}
 
 
 >!raw POST
 ``` none
-title: $title
-description: $description
-coord_x: $coord_x
-coord_y: $coord_y
-friendly_coordinates: $friendly_coordinates
-type: $type
-mood: $mood
-timestamp: $timestamp
-uuid: $uuid
+title: ${$params['title']}
+description: ${$params['description']}
+coord_x: ${$params['coord_x']}
+coord_y: ${$params['coord_y']}
+friendly_coordinates: ${$params['friendly_coordinates']}
+type: ${$params['type']}
+mood: ${$params['mood']}
+timestamp: ${$params['timestamp']}
+uuid: ${$params['uuid']}
 ```
 EOD;
-
         $post = CommentPost::reply(
             $discussion->id,
             $post_discription,
-            $bot->id,
+            $this->bot->id,
             "::0"
         );
 
         $post->save();
 
-        $reportData = new DiscussionReportData;
-
-        $reportData->discussion_id = $discussion->id;
-        $reportData->image_url = $image_url;
-        $reportData->coord_x = $coord_x;
-        $reportData->coord_y = $coord_y;
-        $reportData->friendly_coordinates = $friendly_coordinates;
-        $reportData->type = $type;
-        $reportData->mood = $mood;
-        $reportData->timestamp = $timestamp;
-        $reportData->uuid = $uuid;
-
-        $reportData->save();
-
         $discussion->refreshCommentCount();
         $discussion->refreshParticipantCount();
 
         $discussion->update();
+    }
+
+    private function submitReportData($discussion, $params) {
+        $reportData = new DiscussionReportData;
+
+        $reportData->discussion_id = $discussion->id;
+        $reportData->image_url = $params['image_url'];
+        $reportData->coord_x = $params['coord_x'];
+        $reportData->coord_y = $params['coord_y'];
+        $reportData->friendly_coordinates = $params['friendly_coordinates'];
+        $reportData->type = $params['type'];
+        $reportData->mood = $params['mood'];
+        $reportData->timestamp = $params['timestamp'];
+        $reportData->uuid = $params['uuid'];
+
+        $reportData->save();
+    }
+
+    public function handle(Request $request): Response
+    {
+        $params = $this->getParams($request->getParsedBody());
+
+        $discussion = $this->createDiscussion($params);
+
+        $this->sendPost($discussion, $params);
+
+        $this->submitReportData($discussion, $params);
 
         // See https://docs.flarum.org/extend/api.html#api-endpoints for more information.
         return new JsonResponse([
-            "foo" => $this->settings->get('firefight-feedback-plugin.general_feedback_slug')
         ]);
     }
 }

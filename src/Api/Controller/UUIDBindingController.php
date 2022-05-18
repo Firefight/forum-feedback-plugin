@@ -7,7 +7,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-class UUIDBindingController extends RequestHandlerInterface
+class UUIDBindingController implements RequestHandlerInterface
 {
     /**
      * {@inheritdoc}
