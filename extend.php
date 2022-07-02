@@ -15,7 +15,7 @@ return [
         ->css(__DIR__.'/src/less/forum.less'),
     (new Extend\Settings)
         ->serializeToForum('bindCommand', 'firefight-feedback-plugin.bind_command')
-        ->serializeToForum('authCodeTimeout', 'firefight-feedback-plugin.auth_code_timeout')
+        ->serializeToForum('VerificationCodeTimeout', 'firefight-feedback-plugin.verification_code_timeout')
         ->default('firefight-feedback-plugin.bot_id', 1)
         ->default('firefight-feedback-plugin.verification_code_type', 'N')
         ->default('firefight-feedback-plugin.verification_code_timeout', 5 * 60 * 1000)

@@ -366,7 +366,7 @@ var KeyGenerator = /*#__PURE__*/function (_Component) {
   var _proto = KeyGenerator.prototype;
 
   _proto.view = function view() {
-    return m("li", null, m("legend", null, "Bind Minecraft account to Firefight Forums"), m("p", null, "To bind your Minecraft account to the Firefight Forums, press the button to obtain a code that will last for", m("b", null, " " + app.forum.attribute('authCodeTimeout') + " "), "minutes that you can then submit on the firefight minecraft server using the", m("b", null, m("code", null, " " + app.forum.attribute('bindCommand') + " ")), "command"), m("button", {
+    return m("li", null, m("legend", null, "Bind Minecraft account to Firefight Forums"), m("p", null, "To bind your Minecraft account to the Firefight Forums, press the button to obtain a code that will last for", m("b", null, " " + Math.floor(app.forum.attribute('VerificationCodeTimeout') / (1000 * 60)) + " "), "minutes that you can then submit on the firefight minecraft server using the", m("b", null, m("code", null, " " + app.forum.attribute('bindCommand') + " ")), "command"), m("button", {
       className: "Button"
     }, "Bind Account"));
   };

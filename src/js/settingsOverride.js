@@ -11,7 +11,7 @@ class KeyGenerator extends Component {
                 To bind your Minecraft account to the Firefight Forums, press
                 the button to obtain a code that will last for
                 <b>
-                {` ${app.forum.attribute('authCodeTimeout')} `}
+                {` ${Math.floor(app.forum.attribute('VerificationCodeTimeout') / (1000 * 60))} `}
                 </b>
                 minutes that you can then submit on the firefight minecraft
                 server using the
