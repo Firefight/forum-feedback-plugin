@@ -37,6 +37,7 @@ return [
         ->post('/bindAccount', 'bindAccount', UUIDBindingController::class)
         ->post('/generateUUIDAuthToken', 'generateUUIDAuthToken', TokenGenerationController::class)
         ->post('/submitFeedback', 'submitFeedback', PostCreator::class),
+
     (new Extend\Model(Discussion::class))
         ->belongsTo('discussionReportData', DiscussionReportData::class, 'discussion_id', 'id'),
 

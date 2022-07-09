@@ -7,7 +7,7 @@ use Flarum\Discussion\Discussion;
 use Flarum\Post\CommentPost;
 use Flarum\Tags\Tag;
 use Flarum\User\User;
-use Laminas\Diactoros\Response\JsonResponse;
+use Laminas\Diactoros\Response\EmptyResponse;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -33,8 +33,7 @@ class PostCreator implements RequestHandlerInterface
         $this->bot = User::findOrFail($this->settings->get('firefight-feedback-plugin.bot_id'));
     }
 
-    private function getParams($parsedBody): array
-    {
+    private function getParams($parsedBody) {
         return [
             'title' => Arr::get($parsedBody, 'title', 'title undefined'),
             'image_url' => Arr::get($parsedBody, 'image_url', ''),
@@ -67,26 +66,26 @@ class PostCreator implements RequestHandlerInterface
     }
 
     public function sendPost($discussion, $params) {
-        $post_discription = <<<EOD
-![](${$params['image_url']})
-> ### ${$params['description']}
+      $post_discription = "
+![]($params[image_url])
+> ### $params[description]
 
-> Geo-Phrase: ${$params['friendly_coordinates']}
+> Geo-Phrase: $params[friendly_coordinates]
 
 
 >!raw POST
 ``` none
-title: ${$params['title']}
-description: ${$params['description']}
-coord_x: ${$params['coord_x']}
-coord_y: ${$params['coord_y']}
-friendly_coordinates: ${$params['friendly_coordinates']}
-type: ${$params['type']}
-mood: ${$params['mood']}
-timestamp: ${$params['timestamp']}
-uuid: ${$params['uuid']}
+title: $params[title]
+description: $params[description]
+coord_x: $params[coord_x]
+coord_y: $params[coord_y]
+friendly_coordinates: $params[friendly_coordinates]
+type: $params[type]
+mood: $params[mood]
+timestamp: $params[timestamp]
+uuid: $params[uuid]
 ```
-EOD;
+";
         $post = CommentPost::reply(
             $discussion->id,
             $post_discription,
@@ -128,8 +127,6 @@ EOD;
 
         $this->submitReportData($discussion, $params);
 
-        // See https://docs.flarum.org/extend/api.html#api-endpoints for more information.
-        return new JsonResponse([
-        ]);
+        return new EmptyResponse(204);
     }
 }

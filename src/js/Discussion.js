@@ -1,22 +1,15 @@
 import { extend } from 'flarum/common/extend'
 import DiscussionListItem from 'flarum/forum/components/DiscussionListItem'
 import app from 'flarum/forum/app';
-import Component from 'flarum/common/Component';
 import Link from 'flarum/common/components/Link';
 import avatar from 'flarum/common/helpers/avatar';
 import listItems from 'flarum/common/helpers/listItems';
 import highlight from 'flarum/common/helpers/highlight';
 import icon from 'flarum/common/helpers/icon';
 import humanTime from 'flarum/common/utils/humanTime';
-import ItemList from 'flarum/common/utils/ItemList';
-import abbreviateNumber from 'flarum/common/utils/abbreviateNumber';
 import Dropdown from 'flarum/common/components/Dropdown';
-import TerminalPost from 'flarum/TerminalPost';
-import SubtreeRetainer from 'flarum/common/utils/SubtreeRetainer';
 import DiscussionControls from 'flarum/utils/DiscussionControls';
-import slidable from 'flarum/utils/slidable';
 import classList from 'flarum/common/utils/classList';
-import DiscussionPage from 'flarum/common/components/DiscussionPage';
 import escapeRegExp from 'flarum/common/utils/escapeRegExp';
 import Tooltip from 'flarum/common/components/Tooltip';
 

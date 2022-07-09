@@ -60,7 +60,6 @@ class KeyGenerator extends Component {
           method: "POST",
           url: "/api/generateUUIDAuthToken"
         }).then(response => {
-          console.log(response)
           app.modal.show(VerificationCodeModal, { code: response.code })
         })
     }

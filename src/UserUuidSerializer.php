@@ -6,7 +6,7 @@ use Flarum\Api\Serializer\AbstractSerializer;
 
 class UserUuidSerializer extends AbstractSerializer
 {
-    protected $type = 'user_uuid_data';
+    protected $type = 'user_uuid';
 
     protected function getDefaultAttributes($data)
     {
