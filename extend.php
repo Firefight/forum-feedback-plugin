@@ -39,10 +39,11 @@ return [
         ->post('/submitFeedback', 'submitFeedback', PostCreator::class),
 
     (new Extend\Model(Discussion::class))
-        ->belongsTo('discussionReportData', DiscussionReportData::class, 'discussion_id', 'id'),
+        ->hasOne('discussion_report_data', DiscussionReportData::class),
 
     (new Extend\Model(User::class))
         ->hasMany('user_uuid', UserUUID::class),
+
     (new Extend\ApiSerializer(UserSerializer::class))
         ->hasMany('user_uuid', UserUuidSerializer::class),
     (new Extend\ApiController(ShowUserController::class))

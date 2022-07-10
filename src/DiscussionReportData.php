@@ -13,8 +13,8 @@ class DiscussionReportData extends AbstractModel
     
     protected $table = 'discussion_report_data';
 
-    function discussion(): \Illuminate\Database\Eloquent\Relations\HasOne
+    function discussion()
     {
-        return $this->hasOne(Discussion::class);
+        return $this->belongsTo(Discussion::class);
     }
 }

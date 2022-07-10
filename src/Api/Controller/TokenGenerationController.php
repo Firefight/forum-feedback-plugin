@@ -37,7 +37,7 @@ class TokenGenerationController implements RequestHandlerInterface
         // even more.
         
 
-        $codeType = $this->settings->get('verification_code_type');
+        $codeType = $this->settings->get('firefight-feedback-plugin.verification_code_type');
 
 
         VerificationCode::where('user_id', $actor->id)->delete();
@@ -54,13 +54,13 @@ class TokenGenerationController implements RequestHandlerInterface
 
         $verificationCode->user_id = $actor->id;
 
-        $verificationCode->save();
-
 
         $date = Carbon::now();
-        $date->addMilliseconds(intval($this->settings->get('verification_code_timeout')));
+        $date->addMilliseconds(intval($this->settings->get('firefight-feedback-plugin.verification_code_timeout')));
 
-        $verificationCode->expires = $date->toISOString();
+        $verificationCode->expires = $date;
+
+        $verificationCode->save();
 
 
         return new JsonResponse([

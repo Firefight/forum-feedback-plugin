@@ -3,16 +3,19 @@
 namespace Firefight\ForumFeedback\Api\Controller;
 
 use Firefight\ForumFeedback\DiscussionReportData;
+use Firefight\ForumFeedback\UserUUID;
 use Flarum\Discussion\Discussion;
 use Flarum\Post\CommentPost;
 use Flarum\Tags\Tag;
 use Flarum\User\User;
 use Laminas\Diactoros\Response\EmptyResponse;
+use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface;
 use Illuminate\Support\Arr;
 use Flarum\Settings\SettingsRepositoryInterface;
+use Flarum\Http\RequestUtil;
 
 class PostCreator implements RequestHandlerInterface
 {
@@ -48,8 +51,8 @@ class PostCreator implements RequestHandlerInterface
         ];
     }
 
-    private function createDiscussion($params) {
-        $discussion = Discussion::start($params['title'], $this->bot);
+    private function createDiscussion($params, $user) {
+        $discussion = Discussion::start($params['title'], $user);
         $discussion->save();
 
         $discussion->tags()->attach($this->feedbackTag->id);
@@ -65,7 +68,7 @@ class PostCreator implements RequestHandlerInterface
         return $discussion;
     }
 
-    public function sendPost($discussion, $params) {
+    public function sendPost($discussion, $params, $user) {
       $post_discription = "
 ![]($params[image_url])
 > ### $params[description]
@@ -89,7 +92,7 @@ uuid: $params[uuid]
         $post = CommentPost::reply(
             $discussion->id,
             $post_discription,
-            $this->bot->id,
+            $user->id,
             "::0"
         );
 
@@ -119,11 +122,28 @@ uuid: $params[uuid]
 
     public function handle(Request $request): Response
     {
+        $actor = RequestUtil::getActor($request);
+
+
+        if ($actor->id != $this->settings->get('firefight-feedback-plugin.bot_id')) {
+          return new EmptyResponse(403);
+        }
+
         $params = $this->getParams($request->getParsedBody());
 
-        $discussion = $this->createDiscussion($params);
 
-        $this->sendPost($discussion, $params);
+        $user = $actor;
+
+        $uuid = UserUUID::where('uuid', $params['uuid'])->first();
+
+        if ($uuid) {
+          $user = $uuid->user;
+        }
+
+
+        $discussion = $this->createDiscussion($params, $user);
+
+        $this->sendPost($discussion, $params, $user);
 
         $this->submitReportData($discussion, $params);
 
