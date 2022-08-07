@@ -15,6 +15,9 @@ use Firefight\ForumFeedback\UserUuidSerializer;
 use Firefight\ForumFeedback\Api\Controller\UUIDBindingController;
 use Firefight\ForumFeedback\Api\Controller\TokenGenerationController;
 use Firefight\ForumFeedback\Api\Controller\PostCreator;
+use Firefight\ForumFeedback\Api\Controller\ListUUIDController;
+use Firefight\ForumFeedback\Api\Controller\ShowUUIDController;
+use Firefight\ForumFeedback\Api\Controller\DeleteUUIDController;
 use Firefight\ForumFeedback\VerificationCode;
 
 return [
@@ -36,8 +39,10 @@ return [
     (new Extend\Routes('api'))
         ->post('/bindAccount', 'bindAccount', UUIDBindingController::class)
         ->post('/generateUUIDAuthToken', 'generateUUIDAuthToken', TokenGenerationController::class)
-        ->post('/submitFeedback', 'submitFeedback', PostCreator::class),
-
+        ->post('/submitFeedback', 'submitFeedback', PostCreator::class)
+        ->get('/uuids', 'uuids.index', ListUUIDController::class)
+        ->get('/uuids/{id}', 'uuids.show', ShowUUIDController::class)
+        ->delete('/uuids/{id}', 'uuids.delete', DeleteUUIDController::class),
     (new Extend\Model(Discussion::class))
         ->hasOne('discussion_report_data', DiscussionReportData::class),
 

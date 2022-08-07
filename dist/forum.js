@@ -253,7 +253,7 @@ flarum_forum_components_DiscussionListItem__WEBPACK_IMPORTED_MODULE_1___default.
       className: "DiscussionListItem-main"
     }, m("h3", {
       className: "DiscussionListItem-title"
-    }, flarum_common_helpers_highlight__WEBPACK_IMPORTED_MODULE_6___default()(discussion.title(), this.highlightRegExp)), "hi", m("ul", {
+    }, flarum_common_helpers_highlight__WEBPACK_IMPORTED_MODULE_6___default()(discussion.title(), this.highlightRegExp)), m("ul", {
       className: "DiscussionListItem-info"
     }, flarum_common_helpers_listItems__WEBPACK_IMPORTED_MODULE_5___default()(this.infoItems().toArray()))), this.replyCountItem()));
   } else {
@@ -334,6 +334,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var flarum_common_helpers_listItems__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(flarum_common_helpers_listItems__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var flarum_common_components_Modal__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! flarum/common/components/Modal */ "flarum/common/components/Modal");
 /* harmony import */ var flarum_common_components_Modal__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(flarum_common_components_Modal__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var flarum_forum_app__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! flarum/forum/app */ "flarum/forum/app");
+/* harmony import */ var flarum_forum_app__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(flarum_forum_app__WEBPACK_IMPORTED_MODULE_6__);
+
 
 
 
@@ -363,7 +366,7 @@ var VerificationCodeModal = /*#__PURE__*/function (_Modal) {
 
   _proto.content = function content() {
     // Content to show in the modal's body
-    return m("section", null, m("p", null, "Your code is ", " " + this.attrs.code + " ", ", use the command", m("b", null, m("code", null, " " + app.forum.attribute('bindCommand') + " " + this.attrs.code + " ")), " within the next ", " " + Math.floor(app.forum.attribute('VerificationCodeTimeout') / (1000 * 60)) + " ", "minutes to bind your Minecraft accond to the Forums."));
+    return m("section", null, m("p", null, "Your code is ", " " + this.attrs.code + " ", ", use the command", m("b", null, m("code", null, " " + flarum_forum_app__WEBPACK_IMPORTED_MODULE_6___default.a.forum.attribute('bindCommand') + " " + this.attrs.code + " ")), " within the next ", " " + Math.floor(flarum_forum_app__WEBPACK_IMPORTED_MODULE_6___default.a.forum.attribute('VerificationCodeTimeout') / (1000 * 60)) + " ", "minutes to bind your Minecraft accond to the Forums."));
   };
 
   return VerificationCodeModal;
@@ -381,18 +384,18 @@ var KeyGenerator = /*#__PURE__*/function (_Component) {
   var _proto2 = KeyGenerator.prototype;
 
   _proto2.view = function view() {
-    return m("li", null, m("legend", null, "Bind Minecraft account to Firefight Forums"), m("p", null, "To bind your Minecraft account to the Firefight Forums, press the button to obtain a code that will last for", m("b", null, " " + Math.floor(app.forum.attribute('VerificationCodeTimeout') / (1000 * 60)) + " "), "minutes that you can then submit on the firefight minecraft server using the", m("b", null, m("code", null, " " + app.forum.attribute('bindCommand') + " ")), "command"), m("button", {
+    return m("li", null, m("legend", null, "Bind Minecraft account to Firefight Forums"), m("p", null, "To bind your Minecraft account to the Firefight Forums, press the button to obtain a code that will last for", m("b", null, " " + Math.floor(flarum_forum_app__WEBPACK_IMPORTED_MODULE_6___default.a.forum.attribute('VerificationCodeTimeout') / (1000 * 60)) + " "), "minutes that you can then submit on the firefight minecraft server using the", m("b", null, m("code", null, " " + flarum_forum_app__WEBPACK_IMPORTED_MODULE_6___default.a.forum.attribute('bindCommand') + " ")), "command"), m("button", {
       className: "Button",
       onclick: this.onClick
     }, "Bind Account"));
   };
 
   _proto2.onClick = function onClick() {
-    app.request({
+    flarum_forum_app__WEBPACK_IMPORTED_MODULE_6___default.a.request({
       method: "POST",
-      url: "/api/generateUUIDAuthToken"
+      path: "/api/generateUUIDAuthToken"
     }).then(function (response) {
-      app.modal.show(VerificationCodeModal, {
+      flarum_forum_app__WEBPACK_IMPORTED_MODULE_6___default.a.modal.show(VerificationCodeModal, {
         code: response.code
       });
     });
@@ -411,7 +414,9 @@ var BoundAccounts = /*#__PURE__*/function (_Component2) {
   var _proto3 = BoundAccounts.prototype;
 
   _proto3.view = function view() {
-    return m("li", null, m("legend", null, "Bound Minecraft Accounts"), m("p", null, "TODO: Table of minecraft accounts with remove option"));
+    console.log(flarum_forum_app__WEBPACK_IMPORTED_MODULE_6___default.a.store); // app.store.find('uuids').then(console.log)
+
+    return m("li", null, m("legend", null, "Bound Minecraft Accounts"), m("p", null, "TODO: Table of minecraft accounts wiz remove option"));
   };
 
   return BoundAccounts;

@@ -7,10 +7,7 @@
     "content-hash": "9337d74daaed6b799ed6cf38dd77d121",
     "packages": [
         {
-            "name": "axy/backtrace",
-            "version": "1.0.7",
-            "source": {
-                "type": "git",
+                            "type": "git",
                 "url": "https://github.com/axypro/backtrace.git",
                 "reference": "c6c7d0f3497a07ae934f9e8511cbc2286db311c5"
             },
@@ -20,10 +17,7 @@
                 "reference": "c6c7d0f3497a07ae934f9e8511cbc2286db311c5",
                 "shasum": ""
             },
-            "require": {
-                "php": ">=5.4.0"
-            },
-            "type": "library",
+                        "type": "library",
             "autoload": {
                 "psr-4": {
                     "axy\\backtrace\\": ""

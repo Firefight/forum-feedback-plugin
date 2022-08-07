@@ -37,6 +37,7 @@ class UUIDBindingController implements RequestHandlerInterface
 
         $reports = DiscussionReportData::where('uuid', $uuid)->get();
 
+        return new JsonResponse($reports);
     
         foreach ($reports as $report) {
             $report->discussion->user_id = $authCode->user_id;

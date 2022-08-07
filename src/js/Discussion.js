@@ -73,7 +73,6 @@ DiscussionListItem.prototype.view = function() {
 
           <Link href={app.route.discussion(discussion, jumpTo)} className="DiscussionListItem-main">
             <h3 className="DiscussionListItem-title">{highlight(discussion.title(), this.highlightRegExp)}</h3>
-            hi
             <ul className="DiscussionListItem-info">{listItems(this.infoItems().toArray())}</ul>
           </Link>
           {this.replyCountItem()}

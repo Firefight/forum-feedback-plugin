@@ -2,7 +2,8 @@ import { extend } from 'flarum/common/extend'
 import SettingsPage from 'flarum/forum/components/SettingsPage'
 import Component from 'flarum/common/Component'
 import listItems from 'flarum/common/helpers/listItems'
-import Modal from 'flarum/common/components/Modal';
+import Modal from 'flarum/common/components/Modal'
+import app from 'flarum/forum/app'
 
 class VerificationCodeModal extends Modal {
   // True by default, dictates whether the modal can be dismissed by clicking on the background or in the top right corner.
@@ -58,7 +59,7 @@ class KeyGenerator extends Component {
     onClick() {
         app.request({
           method: "POST",
-          url: "/api/generateUUIDAuthToken"
+          path: "/api/generateUUIDAuthToken"
         }).then(response => {
           app.modal.show(VerificationCodeModal, { code: response.code })
         })
@@ -67,10 +68,12 @@ class KeyGenerator extends Component {
 
 class BoundAccounts extends Component {
   view() {
+    console.log(app.store)
+    // app.store.find('uuids').then(console.log)
     return (
       <li>
         <legend>Bound Minecraft Accounts</legend>
-        <p>TODO: Table of minecraft accounts with remove option</p>
+        <p>TODO: Table of minecraft accounts wiz remove option</p>
       </li>
     )
   }
